@@ -1,0 +1,65 @@
+import re
+
+raw_numbers = [
+    "067\\t123 4567",
+    "(095) 234-5678\\n",
+    "+380 44 123 4567",
+    "380501234567",
+    "    +38(050)123-32-34",
+    "     0503451234",
+    "(050)8889900",
+    "38050-111-22-22",
+    "38050 111 22 11   ",
+]
+
+
+def sanitize_numbers(raw_numbers):
+    sanitized_numbers = []
+    pattern = r"\d+"
+    for number in raw_numbers:
+       matches = re.findall(pattern, number)
+       number = "".join(matches)
+       if number.startswith("38"):
+          sanitized_numbers.append("+"+number)
+       else:
+          sanitized_numbers.append("+38"+number)  
+    return sanitized_numbers
+normalize_phones = sanitize_numbers(raw_numbers)
+print ("Нормалізовані номери телефонів для SMS-розсилки:", normalize_phones)
+
+
+
+#
+import re
+
+def sanitize_numbers(raw_numbers):
+    sanitized_numbers = []
+    for number in raw_numbers:
+        # Видаляємо усі символи, крім цифр, пробілів та "+"
+        number = re.sub(r'[^0-9+]', '', number)
+        
+        # Додаємо префікс "+38" якщо він відсутній
+        if not number.startswith("+"):
+            number = "+38" + number
+            
+        # Обрізаємо зайві "+" на початку номера
+        number = number.lstrip("+")
+        
+        sanitized_numbers.append(number)
+        
+    return sanitized_numbers
+
+raw_numbers = [
+    "067\\t123 4567",
+    "(095) 234-5678\\n",
+    "+380 44 123 4567",
+    "380501234567",
+    "    +38(050)123-32-34",
+    "     0503451234",
+    "(050)8889900",
+    "38050-111-22-22",
+    "38050 111 22 11   ",
+]
+
+normalize_phones = sanitize_numbers(raw_numbers)
+print("Нормалізовані номери телефонів для SMS-розсилки:", normalize_phones)
